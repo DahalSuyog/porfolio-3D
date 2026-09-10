@@ -1,16 +1,19 @@
 "use client";
 
 import React from "react";
-import { SITE } from "@/data/site";
+import { useUIStore } from "@/lib/ui-store";
 import styles from "./contact-modal.module.css";
 
-interface ContactModalProps {
-  onClose: () => void;
-}
+export default function ContactModal() {
+  const contactOpen = useUIStore((state) => state.contactOpen);
+  const closeContact = useUIStore((state) => state.closeContact);
 
-export default function ContactModal({ onClose }: ContactModalProps) {
+  if (!contactOpen) return null;
+
+  const email = "sonofdahal@gmail.com";
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(SITE.email);
+    navigator.clipboard.writeText(email);
     alert("Email copied to clipboard.");
   };
 
@@ -20,10 +23,10 @@ export default function ContactModal({ onClose }: ContactModalProps) {
       role="dialog"
       aria-modal="true"
       aria-label="Contact"
-      onClick={onClose}
+      onClick={closeContact}
     >
       <div className={styles.content} onClick={(event) => event.stopPropagation()}>
-        <button onClick={onClose} className={styles.close} aria-label="Close">
+        <button onClick={closeContact} className={styles.close} aria-label="Close">
           <span className="material-symbols-outlined text-xl">close</span>
         </button>
 
@@ -38,7 +41,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
 
         <div className={styles.emailBox}>
           <span className={styles.emailLabel}>Email</span>
-          <span className={styles.emailAddress}>{SITE.email}</span>
+          <span className={styles.emailAddress}>{email}</span>
           <button onClick={handleCopy} className={styles.copyBtn}>
             <span className="material-symbols-outlined text-sm">
               content_copy
@@ -51,7 +54,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
           <span className={styles.socialLabel}>Elsewhere</span>
           <div className={styles.socialLinks}>
             <a
-              href={SITE.socials.github}
+              href="https://github.com/DahalSuyog"
               target="_blank"
               rel="noreferrer"
               className={styles.socialLink}
@@ -68,7 +71,7 @@ export default function ContactModal({ onClose }: ContactModalProps) {
               </svg>
             </a>
             <a
-              href={SITE.socials.linkedin}
+              href="https://www.linkedin.com/in/suyog-dahal-452801274/"
               target="_blank"
               rel="noreferrer"
               className={styles.socialLink}

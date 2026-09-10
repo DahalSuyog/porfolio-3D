@@ -102,8 +102,16 @@ export default function SmoothScroll() {
     window.addEventListener("resize", measure);
 
     if (mountedRef.current) {
-      lenisRef.current?.scrollTo(0, { immediate: true });
-      window.scrollTo(0, 0);
+      const hash = window.location.hash.slice(1);
+      const target = hash ? document.getElementById(hash) : null;
+      if (target) {
+        const top = target.getBoundingClientRect().top + window.scrollY - 64;
+        lenisRef.current?.scrollTo(top, { immediate: true });
+        window.scrollTo(0, top);
+      } else {
+        lenisRef.current?.scrollTo(0, { immediate: true });
+        window.scrollTo(0, 0);
+      }
     }
     mountedRef.current = true;
 

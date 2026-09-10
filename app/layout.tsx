@@ -4,6 +4,7 @@ import "./globals.css";
 import styles from "./layout.module.css";
 import SceneCanvas from "./components/scene/SceneCanvas";
 import SmoothScroll from "./components/dom/SmoothScroll";
+import ContactModal from "./components/dom/ContactModal";
 
 const newsreader = Newsreader({
   variable: "--font-newsreader",
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SceneCanvas />
         <SmoothScroll />
         {children}
+        <ContactModal />
       </body>
     </html>
   );

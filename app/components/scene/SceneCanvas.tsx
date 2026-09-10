@@ -30,7 +30,7 @@ export default function SceneCanvas() {
   if (!webgl) return null;
 
   return (
-    <div className="scene-canvas" aria-hidden="true">
+    <div className="scene-canvas">
       <Experience />
     </div>
   );

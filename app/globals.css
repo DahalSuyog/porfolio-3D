@@ -68,12 +68,7 @@ body {
   }
 }
 
-/* --- Scroll-scrubbed depth ---
-   Elements wrapped in <Depth> are transformed each frame by the depth engine
-   (lib/depth-engine.ts) based on their position relative to the viewport
-   centre. Reduced motion disables the engine entirely. */
-
-[data-depth] {
-  transform-origin: center center;
-  backface-visibility: hidden;
-}
+/* --- In-scene DOM panels ---
+   Content is rendered inside the WebGL scene through drei's <Html transform>
+   and positioned by the station panel wrapper. The canvas wrapper ignores
+   pointer events; the panel DOM re-enables them on itself. */

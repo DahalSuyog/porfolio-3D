@@ -45,20 +45,26 @@ render is an error (use `useRef` for per-frame mutable objects).
   distant stations read as fog instead of clutter. Zones and their fade centres
   are registered in `Scene.tsx` — keep those two in sync.
 - **Demos mode**: the same canvas switches scene contents based on `pathname`.
-  The demos page pushes the selected project id into `lib/demo-store.ts` so the
-  3D artifact can recolor; the page itself keeps the URL (`?project=`) as the
-  source of truth.
-- **`lib/depth-engine.ts` + `app/components/dom/Depth.tsx`** give DOM content the
-  same scroll-scrubbed motion as the 3D corridor: each wrapped element is
-  transformed every frame from its distance to the viewport centre (approach
-  from far → sharp at centre → fly past with scale/tilt/blur/fade). The engine
-  writes inline styles from one rAF loop and never re-renders React. Call
-  `remeasureDepth()` after content height changes (tab switches, filters).
-  Reduced motion disables the engine; coarse pointers get reduced amplitude and
-  no blur. Bottom-of-page content needs enough footer bottom padding to be able
-  to reach the viewport centre, otherwise it stays faded.
-- Content lives in `data/site.ts` and `data/projects.ts`. Never hardcode copy in
-  pages.
+  `lib/demo-store.ts` holds the active project/category/tab for the in-scene
+  panel; the demos page keeps the URL (`?project=`) as the source of truth and
+  syncs it through `DemosUrlSync`.
+- **Content lives in the 3D scene.** `StationPanel` (`scene/three/StationPanel.tsx`)
+  renders real DOM through drei's `<Html transform>` at each camera station,
+  rotated once to face the station camera and faded with the same distance curve
+  as the zones. Panels taller than the viewport are scaled to fit via a
+  `ResizeObserver`. The page itself only renders invisible spacer sections
+  (`data-scroll-section`) that give the document scroll range.
+- **Panels render in a separate React root** (drei's `Html` uses
+  `ReactDOM.createRoot`), so `next/navigation` hooks (`useRouter`,
+  `useSearchParams`) do NOT work inside them. Use the zustand stores
+  (`lib/ui-store.ts`, `lib/demo-store.ts`) and the native History API
+  (`window.history.replaceState`) instead. `next/link` and `next/image` work.
+- **No-WebGL fallback**: pages render the same content components in normal
+  document flow (`HomeFallback`, `DemosFallback`) when `useWebGLSupport()`
+  returns `false`. `useWebGLSupport()` returns `null` until hydration so the
+  first client render matches the server and there is no fallback flash.
+- Content components live in `app/components/content/` and read from
+  `data/site.ts` / `data/projects.ts`. Never hardcode copy in pages.
 
 ## Styling
 
@@ -66,12 +72,17 @@ render is an error (use `useRef` for per-frame mutable objects).
   `tailwind.config.js`). Palette: warm near-black `#121211`, brass `#c9a87c`,
   neutrals only. Fonts: Newsreader (headlines) + Manrope (body) via `next/font`,
   Material Symbols for icons.
-- Pages combine Tailwind utilities with CSS Modules; the DOM sits in `z-index: 1`
-  above `.scene-canvas` (fixed, `z-index: 0`, `pointer-events: none`).
+- Pages combine Tailwind utilities with CSS Modules; spacer sections sit at
+  `z-index: 1` with `pointer-events: none` so clicks reach the in-scene panels
+  (inside `.scene-canvas`, fixed, `z-index: 0`). Panel DOM re-enables pointer
+  events on itself.
 
 ## Gotchas
 
-- The canvas is `pointer-events: none`; all interaction happens in DOM overlay.
+- `.scene-canvas` is `pointer-events: none` and the spacer `<main>` must stay
+  `pointer-events: none`, or it swallows clicks meant for the panels.
+- Panel scaling is computed from `camera.projectionMatrix` and viewport height
+  (`distanceFactor`); do not hardcode it.
 - `next.config.ts` pins `turbopack.root` / `outputFileTracingRoot` because stray
   lockfiles in the home directory break workspace-root inference.
 - Dev-mode HMR can lose the WebGL context after many edits — hard reload before

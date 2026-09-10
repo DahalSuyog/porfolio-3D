@@ -4,11 +4,11 @@ import React from "react";
 import Link from "next/link";
 import { scrollToSection } from "@/lib/lenis";
 import { useScrollStore } from "@/lib/scroll-store";
+import { useUIStore } from "@/lib/ui-store";
 import type { SectionId } from "@/lib/sections";
 import styles from "./navbar.module.css";
 
 interface NavbarProps {
-  onContactClick: () => void;
   activePage?: "home" | "demos";
 }
 
@@ -19,11 +19,9 @@ const LINKS: { id: SectionId; label: string; href: string }[] = [
   { id: "experience", label: "Experience", href: "/#experience" },
 ];
 
-export default function Navbar({
-  onContactClick,
-  activePage = "home",
-}: NavbarProps) {
+export default function Navbar({ activePage = "home" }: NavbarProps) {
   const section = useScrollStore((state) => state.section);
+  const openContact = useUIStore((state) => state.openContact);
 
   return (
     <header className={styles.navbar}>
@@ -61,7 +59,7 @@ export default function Navbar({
         </Link>
       </nav>
 
-      <button onClick={onContactClick} className={styles.contactBtn}>
+      <button onClick={openContact} className={styles.contactBtn}>
         Contact
       </button>
     </header>

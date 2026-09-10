@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SITE } from "@/data/site";
 import { useUIStore } from "@/lib/ui-store";
-import styles from "./footer.module.css";
+import styles from "./content.module.css";
 
-export default function Footer() {
+export default function ContactContent() {
   const openContact = useUIStore((state) => state.openContact);
   const [time, setTime] = useState<string | null>(null);
 
@@ -24,33 +24,28 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer
-      id="contact"
-      data-scroll-section="contact"
-      className={styles.footer}
-    >
-      <div className={styles.scrim} aria-hidden="true" />
-      <div className={styles.inner}>
-        <div className={styles.top}>
+    <div className={styles.panel}>
+      <div className={styles.contact}>
+        <div>
           <p className={styles.label}>Contact</p>
-          <h2 className={styles.title}>
+          <h2 className={styles.contactTitle}>
             Let&rsquo;s build something <em>intelligent</em>.
           </h2>
-          <p className={styles.desc}>
+          <p className={styles.contactDesc}>
             Questions, opportunities, or just a hello. My inbox is open, from
             Kathmandu to wherever you are.
           </p>
-          <div className={styles.actions}>
-            <button onClick={openContact} className={styles.primary}>
+          <div className={styles.contactActions}>
+            <button className={styles.primary} onClick={openContact}>
               Get in touch
             </button>
-            <a href={`mailto:${SITE.email}`} className={styles.secondary}>
+            <a href={`mailto:${SITE.email}`} className={styles.emailLink}>
               {SITE.email}
             </a>
           </div>
         </div>
 
-        <div className={styles.meta}>
+        <div className={styles.contactMeta}>
           <div className={styles.socials}>
             <a
               className={styles.socialLink}
@@ -68,7 +63,7 @@ export default function Footer() {
             >
               LinkedIn
             </a>
-            <button onClick={openContact} className={styles.socialLink}>
+            <button className={styles.socialLink} onClick={openContact}>
               Contact
             </button>
           </div>
@@ -81,6 +76,6 @@ export default function Footer() {
           </p>
         </div>
       </div>
-    </footer>
+    </div>
   );
 }

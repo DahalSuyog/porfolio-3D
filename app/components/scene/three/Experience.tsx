@@ -10,6 +10,9 @@ export default function Experience() {
       dpr={[1, 1.75]}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       camera={{ position: [0, 0.4, 9], fov: 42, near: 0.1, far: 90 }}
+      onCreated={({ gl }) => {
+        gl.domElement.setAttribute("aria-hidden", "true");
+      }}
     >
       <Suspense fallback={null}>
         <Scene />
