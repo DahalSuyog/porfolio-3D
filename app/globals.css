@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #121211;
+  --color-surface: #191918;
+  --color-surface-container: #222220;
+  --color-surface-container-high: #2b2b28;
+  --color-primary: #c9a87c;
+  --color-on-primary: #1a1510;
+  --color-on-surface: #eceae4;
+  --color-on-surface-variant: #8f8c85;
+  --color-outline: #3c3b37;
+
+  --font-sans: var(--font-manrope), sans-serif;
+  --font-headline: var(--font-newsreader), Georgia, serif;
+  --font-body: var(--font-manrope), sans-serif;
+  --font-label: var(--font-manrope), sans-serif;
+}
+
+html {
+  background-color: var(--color-background);
+}
+
+body {
+  background-color: var(--color-background);
+  background-image:
+    radial-gradient(1100px 780px at 72% -12%, rgba(201, 168, 124, 0.07), transparent 62%),
+    radial-gradient(900px 720px at 8% 112%, rgba(201, 168, 124, 0.05), transparent 60%);
+  background-attachment: fixed;
+  color: var(--color-on-surface);
+  font-family: var(--font-body);
+  overflow-x: clip;
+}
+
+::selection {
+  background: rgba(201, 168, 124, 0.3);
+  color: var(--color-on-surface);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+@layer utilities {
+  .scene-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .scene-canvas canvas {
+    display: block;
+  }
+
+  .glass-panel {
+    background: rgba(25, 25, 24, 0.72);
+    border: 1px solid rgba(236, 234, 228, 0.08);
+  }
+
+  .ghost-border {
+    border: 1px solid rgba(236, 234, 228, 0.08);
+  }
+
+  .ambient-shadow {
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* --- Scroll reveal infrastructure ---
+   Elements carry data-reveal="rise|fade|left" and start hidden only when the
+   user accepts motion. The Reveal component flips data-visible="true" once the
+   element enters the viewport. */
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transition:
+      opacity 0.7s ease,
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  [data-reveal="rise"] {
+    transform: translateY(1.75rem);
+  }
+
+  [data-reveal="left"] {
+    transform: translateX(-1.75rem);
+  }
+
+  [data-reveal][data-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+}
