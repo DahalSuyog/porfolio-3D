@@ -68,29 +68,12 @@ body {
   }
 }
 
-/* --- Scroll reveal infrastructure ---
-   Elements carry data-reveal="rise|fade|left" and start hidden only when the
-   user accepts motion. The Reveal component flips data-visible="true" once the
-   element enters the viewport. */
+/* --- Scroll-scrubbed depth ---
+   Elements wrapped in <Depth> are transformed each frame by the depth engine
+   (lib/depth-engine.ts) based on their position relative to the viewport
+   centre. Reduced motion disables the engine entirely. */
 
-@media (prefers-reduced-motion: no-preference) {
-  [data-reveal] {
-    opacity: 0;
-    transition:
-      opacity 0.7s ease,
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  [data-reveal="rise"] {
-    transform: translateY(1.75rem);
-  }
-
-  [data-reveal="left"] {
-    transform: translateX(-1.75rem);
-  }
-
-  [data-reveal][data-visible="true"] {
-    opacity: 1;
-    transform: none;
-  }
+[data-depth] {
+  transform-origin: center center;
+  backface-visibility: hidden;
 }

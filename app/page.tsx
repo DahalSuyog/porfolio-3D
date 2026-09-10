@@ -5,7 +5,7 @@ import Link from "next/link";
 import Navbar from "./components/dom/Navbar";
 import Footer from "./components/dom/Footer";
 import ContactModal from "./components/dom/ContactModal";
-import Reveal from "./components/dom/Reveal";
+import Depth from "./components/dom/Depth";
 import { scrollToSection } from "@/lib/lenis";
 import { SITE, SKILLS, TIMELINE } from "@/data/site";
 import { PROJECTS } from "@/data/projects";
@@ -23,29 +23,39 @@ export default function Home() {
         <section id="hero" data-scroll-section="hero" className={styles.hero}>
           <div className={styles.heroInner}>
             <div className={styles.heroText}>
-              <p className={styles.availability}>{SITE.availability}</p>
-              <h1 className={styles.heroTitle}>{SITE.name}</h1>
-              <p className={styles.heroRole}>{SITE.role}</p>
-              <p className={styles.heroIntro}>{SITE.intro}</p>
-              <div className={styles.heroActions}>
-                <Link
-                  href="/#work"
-                  className={styles.ctaPrimary}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    scrollToSection("work");
-                  }}
-                >
-                  View work
-                </Link>
-                <button onClick={openContact} className={styles.ctaSecondary}>
-                  Contact me
-                </button>
-              </div>
+              <Depth strength={0.5}>
+                <p className={styles.availability}>{SITE.availability}</p>
+              </Depth>
+              <Depth strength={0.75}>
+                <h1 className={styles.heroTitle}>{SITE.name}</h1>
+                <p className={styles.heroRole}>{SITE.role}</p>
+              </Depth>
+              <Depth strength={0.9}>
+                <p className={styles.heroIntro}>{SITE.intro}</p>
+              </Depth>
+              <Depth strength={1}>
+                <div className={styles.heroActions}>
+                  <Link
+                    href="/#work"
+                    className={styles.ctaPrimary}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      scrollToSection("work");
+                    }}
+                  >
+                    View work
+                  </Link>
+                  <button onClick={openContact} className={styles.ctaSecondary}>
+                    Contact me
+                  </button>
+                </div>
+              </Depth>
             </div>
             <div className={styles.heroVisual} aria-hidden="true" />
           </div>
-          <p className={styles.scrollHint}>Scroll to explore</p>
+          <Depth strength={1}>
+            <p className={styles.scrollHint}>Scroll to explore</p>
+          </Depth>
         </section>
 
         <section
@@ -54,7 +64,7 @@ export default function Home() {
           className={styles.chapter}
         >
           <div className={styles.chapterInner}>
-            <Reveal>
+            <Depth strength={0.55}>
               <header className={styles.chapterHeader}>
                 <p className={styles.chapterLabel}>Skills</p>
                 <h2 className={styles.chapterTitle}>What I work with</h2>
@@ -63,14 +73,14 @@ export default function Home() {
                   systems, and applied machine learning.
                 </p>
               </header>
-            </Reveal>
+            </Depth>
 
             <div className={styles.skillsGrid}>
-              {SKILLS.map((skill, i) => (
-                <Reveal
+              {SKILLS.map((skill) => (
+                <Depth
                   key={skill.title}
-                  delay={i * 100}
-                  className={styles.cardReveal}
+                  strength={1}
+                  className={styles.cardDepth}
                 >
                   <article className={styles.skillCard}>
                     <div className={styles.skillIcon}>
@@ -88,7 +98,7 @@ export default function Home() {
                       ))}
                     </div>
                   </article>
-                </Reveal>
+                </Depth>
               ))}
             </div>
           </div>
@@ -96,7 +106,7 @@ export default function Home() {
 
         <section id="work" data-scroll-section="work" className={styles.chapter}>
           <div className={styles.chapterInner}>
-            <Reveal>
+            <Depth strength={0.55}>
               <header className={styles.chapterHeader}>
                 <p className={styles.chapterLabel}>Selected work</p>
                 <h2 className={styles.chapterTitle}>Projects</h2>
@@ -104,14 +114,14 @@ export default function Home() {
                   Focused systems exploring agent learning and computer vision.
                 </p>
               </header>
-            </Reveal>
+            </Depth>
 
             <div className={styles.workGrid}>
-              {PROJECTS.map((project, i) => (
-                <Reveal
+              {PROJECTS.map((project) => (
+                <Depth
                   key={project.id}
-                  delay={i * 100}
-                  className={styles.cardReveal}
+                  strength={1}
+                  className={styles.cardDepth}
                 >
                   <article className={styles.workCard}>
                     <div className={styles.workTags}>
@@ -141,7 +151,7 @@ export default function Home() {
                       </span>
                     </Link>
                   </article>
-                </Reveal>
+                </Depth>
               ))}
             </div>
           </div>
@@ -153,18 +163,18 @@ export default function Home() {
           className={styles.chapter}
         >
           <div className={styles.chapterInner}>
-            <Reveal>
+            <Depth strength={0.55}>
               <header className={styles.chapterHeader}>
                 <p className={styles.chapterLabel}>Experience</p>
                 <h2 className={styles.chapterTitle}>
                   Education &amp; background
                 </h2>
               </header>
-            </Reveal>
+            </Depth>
 
             <div className={styles.timeline}>
-              {TIMELINE.map((entry, i) => (
-                <Reveal key={entry.title} variant="left" delay={i * 120}>
+              {TIMELINE.map((entry) => (
+                <Depth key={entry.title} strength={0.85}>
                   <article className={styles.timelineItem}>
                     <span className={styles.timelineDate}>{entry.period}</span>
                     <div>
@@ -173,7 +183,7 @@ export default function Home() {
                       <p className={styles.timelineDesc}>{entry.desc}</p>
                     </div>
                   </article>
-                </Reveal>
+                </Depth>
               ))}
             </div>
           </div>

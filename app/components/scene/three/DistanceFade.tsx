@@ -13,6 +13,10 @@ interface DistanceFadeProps {
   children: ReactNode;
 }
 
+/** Zones also fade out when the camera flies inside/through them. */
+const CLOSE_FADE = 2.5;
+const CLOSE_FULL = 5.5;
+
 /**
  * Fades a zone in as the camera approaches and out as it recedes, so distant
  * stations read as fog rather than clutter. Base opacities are captured once
@@ -31,7 +35,9 @@ export default function DistanceFade({
     const node = group.current;
     if (!node) return;
     const distance = camera.position.distanceTo(centerVec);
-    const fade = 1 - THREE.MathUtils.smoothstep(distance, near, far);
+    const fadeFar = 1 - THREE.MathUtils.smoothstep(distance, near, far);
+    const fadeClose = THREE.MathUtils.smoothstep(distance, CLOSE_FADE, CLOSE_FULL);
+    const fade = Math.min(fadeFar, fadeClose);
     node.visible = fade > 0.02;
 
     node.traverse((child) => {

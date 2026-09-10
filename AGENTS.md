@@ -48,6 +48,15 @@ render is an error (use `useRef` for per-frame mutable objects).
   The demos page pushes the selected project id into `lib/demo-store.ts` so the
   3D artifact can recolor; the page itself keeps the URL (`?project=`) as the
   source of truth.
+- **`lib/depth-engine.ts` + `app/components/dom/Depth.tsx`** give DOM content the
+  same scroll-scrubbed motion as the 3D corridor: each wrapped element is
+  transformed every frame from its distance to the viewport centre (approach
+  from far → sharp at centre → fly past with scale/tilt/blur/fade). The engine
+  writes inline styles from one rAF loop and never re-renders React. Call
+  `remeasureDepth()` after content height changes (tab switches, filters).
+  Reduced motion disables the engine; coarse pointers get reduced amplitude and
+  no blur. Bottom-of-page content needs enough footer bottom padding to be able
+  to reach the viewport centre, otherwise it stays faded.
 - Content lives in `data/site.ts` and `data/projects.ts`. Never hardcode copy in
   pages.
 

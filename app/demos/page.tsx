@@ -7,8 +7,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "../components/dom/Navbar";
 import Footer from "../components/dom/Footer";
 import ContactModal from "../components/dom/ContactModal";
+import Depth from "../components/dom/Depth";
 import { CATEGORIES, PROJECTS, getProject } from "@/data/projects";
 import { useDemoStore } from "@/lib/demo-store";
+import { remeasureDepth } from "@/lib/depth-engine";
 import styles from "./demos.module.css";
 
 export default function DemosPage() {
@@ -67,6 +69,10 @@ function DemosContent() {
     setActiveId(activeProjectId);
   }, [activeProjectId, setActiveId]);
 
+  useEffect(() => {
+    remeasureDepth();
+  }, [activeTab, activeProjectId, activeCategory]);
+
   const handleCopyCode = () => {
     navigator.clipboard.writeText(activeProject.codeSnippet);
     alert("Code copied to clipboard.");
@@ -96,36 +102,43 @@ function DemosContent() {
       data-scroll-section="demos"
       style={{ "--project-accent": activeProject.accent } as React.CSSProperties}
     >
-      <div className={styles.header}>
-        <p className={styles.pageLabel}>Demos</p>
-        <h1 className={styles.pageTitle}>Projects</h1>
-        <p className={styles.pageDesc}>
-          Technical notes and implementation excerpts for selected projects.
-        </p>
-        <Link href="/" className={styles.backLink}>
-          <span className="material-symbols-outlined text-base">
-            arrow_back
-          </span>
-          Back home
-        </Link>
-      </div>
+      <Depth strength={0.5}>
+        <div className={styles.header}>
+          <p className={styles.pageLabel}>Demos</p>
+          <h1 className={styles.pageTitle}>Projects</h1>
+          <p className={styles.pageDesc}>
+            Technical notes and implementation excerpts for selected projects.
+          </p>
+          <Link href="/" className={styles.backLink}>
+            <span className="material-symbols-outlined text-base">
+              arrow_back
+            </span>
+            Back home
+          </Link>
+        </div>
+      </Depth>
 
-      <div className={styles.categoriesBar}>
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => handleCategoryChange(cat)}
-            className={`${styles.catBtn} ${
-              activeCategory === cat ? styles.catBtnActive : styles.catBtnInactive
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
+      <Depth strength={0.7}>
+        <div className={styles.categoriesBar}>
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => handleCategoryChange(cat)}
+              className={`${styles.catBtn} ${
+                activeCategory === cat
+                  ? styles.catBtnActive
+                  : styles.catBtnInactive
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </Depth>
 
       <div className={styles.dashboard}>
-        <div className={styles.viewer}>
+        <Depth strength={0.7}>
+          <div className={styles.viewer}>
           <div className={styles.tabBar}>
             {(
               [
@@ -231,7 +244,8 @@ function DemosContent() {
               )}
             </div>
           </div>
-        </div>
+          </div>
+        </Depth>
 
         <aside className={styles.sidebar}>
           <div className={styles.projectList}>
